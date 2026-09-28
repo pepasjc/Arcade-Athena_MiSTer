@@ -52,7 +52,18 @@ module AthenaCore
     //sound output
     output wire signed [15:0] snd1,
     output wire signed [15:0] snd2,
-    output wire sample
+    output wire sample,
+
+    //RetroAchievements tap: memory writes of the three Z80s (i_clk domain)
+    output wire RA_A_WR,
+    output wire [15:0] RA_A_AD,
+    output wire [7:0] RA_A_DO,
+    output wire RA_B_WR,
+    output wire [15:0] RA_B_AD,
+    output wire [7:0] RA_B_DO,
+    output wire RA_S_WR,
+    output wire [15:0] RA_S_AD,
+    output wire [7:0] RA_S_DO
 );
     logic VRD, AE, BE;
     
@@ -269,7 +280,14 @@ TNKIIICore_Clocks_Sync amc_clocks_sync(
         .B1SX(B1SX), //Back1 video scroll X
         .B1SY(B1SY), //Back1 video scroll Y
         .COIN_COUNTERS(COIN_COUNTERS),
-        .BACK1_VRAM_CSn(BACK1_VRAM_CSn)
+        .BACK1_VRAM_CSn(BACK1_VRAM_CSn),
+
+        .RA_A_WR(RA_A_WR),
+        .RA_A_AD(RA_A_AD),
+        .RA_A_DO(RA_A_DO),
+        .RA_B_WR(RA_B_WR),
+        .RA_B_AD(RA_B_AD),
+        .RA_B_DO(RA_B_DO)
     );
 
     Dual_YM3526_Sound amc_snd_sync
@@ -288,7 +306,11 @@ TNKIIICore_Clocks_Sync amc_clocks_sync(
         .MS(SND_BUSY),
         .snd1(snd1),
         .snd2(snd2),
-        .sample(sample)
+        .sample(sample),
+
+        .RA_WR(RA_S_WR),
+        .RA_AD(RA_S_AD),
+        .RA_DO(RA_S_DO)
     );
 
     //Video Attributes

@@ -23,7 +23,12 @@ module Dual_YM3526_Sound
     // combined output
     output  wire signed [15:0] snd1,
     output  wire signed [15:0] snd2,
-    output  wire sample
+    output  wire sample,
+
+    //RetroAchievements tap: sound CPU memory writes (level strobe)
+    output  wire RA_WR,
+    output  wire [15:0] RA_AD,
+    output  wire [7:0] RA_DO
 );
     logic [7:0] latch_din;
 
@@ -200,6 +205,10 @@ module Dual_YM3526_Sound
         .WR(ioctl_wr)
     );
     //---------------------------------
+
+    assign RA_WR = ~nMREQ & ~nWR;
+    assign RA_AD = A;
+    assign RA_DO = cpu_dout;
 
     //--- HM6116-4 2Kx8 200ns SRAM ---
     assign CS_RAMn = A[13] | F4_2_Y3n;
